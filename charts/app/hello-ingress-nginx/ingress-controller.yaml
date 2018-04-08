@@ -1,0 +1,11 @@
+controller:
+  image:
+    repository: quay.io/kubernetes-ingress-controller/nginx-ingress-controller
+    tag: "0.12.0"
+  daemonset:
+    useHostPort: true
+  nodeSelector: {
+    am.is/node-exposable: "true"
+  }
+rbac:
+  create: true

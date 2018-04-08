@@ -1,0 +1,10 @@
+name: ingress
+apiVersion: v1
+home: https://github.com/bailantaotao/misc
+description: A Helm chart for ingress rules
+maintainers:
+  - name: Edwin Hsieh
+    email: edwin@am.is
+version: 0.1.0
+sources:
+  - https://github.com/bailantaotao/misc/charts/ingress-nginx
