@@ -2,17 +2,12 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "traefik.fullname" . }}-dashboard
+  name: {{ template "fullname" . }}-dashboard
   labels:
-    app: {{ template "traefik.name" . }}
+    app: {{ template "fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
-  {{- if .Values.dashboard.ingress }}
-  {{- range $key, $value := .Values.dashboard.ingress.labels }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-  {{- end }}
   annotations:
   {{- if .Values.dashboard.ingress }}
   {{- range $key, $value := .Values.dashboard.ingress.annotations }}
@@ -21,10 +16,11 @@ metadata:
   {{- end }}
 spec:
   rules:
-  - host: {{ .Values.dashboard.domain }}
+  - host: {{ .Values.dashboard.domain.host }}
     http:
       paths:
-      - backend:
-          serviceName: {{ template "traefik.fullname" . }}-dashboard
+      - path: {{ .Values.dashboard.domain.path }}
+        backend:
+          serviceName: {{ template "fullname" . }}-dashboard
           servicePort: 80
 {{- end }}

@@ -1,14 +1,10 @@
-{{- if and .Values.acme.enabled .Values.acme.persistence.enabled (not .Values.acme.persistence.existingClaim) }}
+{{- if and .Values.acme.enabled .Values.acme.persistence.enabled }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-{{- if .Values.acme.persistence.annotations }}
-  annotations:
-{{ toYaml .Values.acme.persistence.annotations | indent 4 }}
-{{- end }}
-  name: {{ template "traefik.fullname" . }}-acme
+  name: {{ template "fullname" . }}-acme
   labels:
-    app: {{ template "traefik.name" . }}
+    app: {{ template "fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"

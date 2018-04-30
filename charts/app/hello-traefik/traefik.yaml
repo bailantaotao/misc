@@ -1,17 +1,19 @@
 ## Default values for Traefik
 image: traefik
-imageTag: 1.4.0
+imageTag: 1.5.4
 serviceType: LoadBalancer
 loadBalancerIP:
 # loadBalancerSourceRanges: []
 replicas: 1
-cpuRequest: 100m
-memoryRequest: 20Mi
-cpuLimit: 100m
-memoryLimit: 30Mi
+cpuRequest: 200m
+memoryRequest: 200Mi
+cpuLimit: 200m
+memoryLimit: 300Mi
 debug:
   enabled: false
-nodeSelector: {}
+nodeSelector: {
+  am.is/node-exposable: "true"
+}
   # key: value
 tolerations: []
 # - key: "key"
@@ -41,15 +43,21 @@ acme:
     # storageClass: "-"
     accessMode: ReadWriteOnce
     size: 1Gi
-dashboard:
-  enabled: false
-  domain: traefik.example.com
-  ingress:
-    # annotations:
-    #   key: value
+entrypoint:
   auth:
-    # basic:
-    #   username: password
+    basic:
+      amis: "$apr1$KNr3AuVs$CiwBnVH9iQCvLmqbgqlzZ0"
+dashboard:
+  enabled: true
+  domain:
+    host: amis.nonsandbox.am.is
+    path: /ingress
+  ingress:
+    annotations:
+      traefik.frontend.rule.type: PathPrefixStrip
+  auth:
+    basic:
+      amis: "$apr1$KNr3AuVs$CiwBnVH9iQCvLmqbgqlzZ0"
   statistics:
     ## Number of recent errors to show in the ‘Health’ tab
     # recentErrors:
@@ -65,13 +73,23 @@ accessLogs:
   ## Path to the access logs file. If not provided, Traefik defaults it to stdout.
   # filePath: ""
   format: common  # choices are: common, json
-  ## Kubernetes ingress filters
-  # kubernetes:
-  #   namespaces:
-  #   - default
-  #   labelSelector:
+# Kubernetes ingress filters
+kubernetes:
+  dashboard:
+    enabled: false
+    domain:
+      host: k8s.amis.nonsandbox.am.is
+      path: /
+    ingress:
+      # annotations:
+      #   traefik.frontend.rule.type: PathPrefixStripRegex
+  namespaces:
+  - default
+  - kube-system
+  - logging
+  labelSelector:
 rbac:
-  enabled: false
+  enabled: true
 ## Enable the /metrics endpoint, for now only supports prometheus
 ## set to true to enable metric collection by prometheus
 metrics:

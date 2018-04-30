@@ -1,0 +1,17 @@
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    ingress.kubernetes.io/auth-type: "basic"
+    ingress.kubernetes.io/auth-secret: "basic-auth"
+  rules:
+  - host: testing.example.com
+    http:
+      paths:
+      - path: /hello
+        backend:
+          serviceName: hello-svc
+          servicePort: 80
+      - path: /bye
+        backend:
+          serviceName: hello-svc
+          servicePort: 80
