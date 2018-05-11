@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: profiling
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: profilingserver
+    spec:
+      containers:
+      - name: profiling
+        image: quay.io/edwin/profiling:latest
+        volumeMounts:
+        - name: cpuprofiling
+          mountPath: "/mnt/azure"
+      volumes:
+      - name: cpuprofiling
+        azureFile:
+          secretName: "mapi-fubon1005-secret-profiling"
+          shareName: "cpuprofiling"
+          readOnly: false
