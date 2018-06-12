@@ -45,6 +45,8 @@ help:
 	@echo  '  hello-docker.push            - Push hello docker image to quay.io'
 	@echo  '  log-docker                   - Build log docker image'
 	@echo  '  log-docker.push              - Push log docker image to quay.io'
+	@echo  '  profiling-docker             - Build profiling docker image'
+	@echo  '  profiling-docker.push        - Push profiling docker image to quay.io'
 	@echo  ''
 	@echo  'Cleaning targets:'
 	@echo  '  clean                       - Remove built executables'
