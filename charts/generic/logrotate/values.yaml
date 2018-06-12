@@ -1,0 +1,20 @@
+# Default values for logrotate.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+entity:
+  name: ""
+
+namespace: kube-system
+
+image:
+  repository: quay.io/amis/logrotate
+  tag: amis-v1.2.0
+  pullPolicy: IfNotPresent
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+logrotate:
+  copies: 0
+  cronschedule: "*/5 * * * * *"

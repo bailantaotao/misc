@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: "{{ template "fullname" . }}"
+  namespace: {{ .Values.namespace }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    {{- if .Values.entity.name }}
+    entity: "{{ .Values.entity.name }}"
+    {{- end }}
+spec:
+  template:
+    metadata:
+      labels:
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+        environment: {{ template "environment" . }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: LOGS_DIRECTORIES
+          value: "/var/lib/docker/containers /var/log/docker"
+        - name: LOGROTATE_CRONSCHEDULE
+          value: {{ .Values.logrotate.cronschedule | quote }}
+        - name: LOGROTATE_COPIES
+          value: {{ .Values.logrotate.copies | quote }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        volumeMounts:
+         - name: containers
+           mountPath: /var/lib/docker/containers
+         - name: varlog
+           mountPath: /var/log/docker
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - hostPath:
+            path: /var/lib/docker/containers
+          name: containers
+        - hostPath:
+            path: /var/log/docker
+          name: varlog
